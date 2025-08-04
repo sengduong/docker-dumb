@@ -37,20 +37,20 @@ volumes:
     driver_opts:
       type: "nfs"
       o: ${DUMB_NFS_PATH}
-      device: ${DUMB_NFS_DEVICE_CONFIG}
+      device: ${DUMB_NFS_CONFIG}
   dumb_log:
     driver_opts:
       type: "nfs"
       o: ${DUMB_NFS_PATH}
-      device: ${DUMB_NFS_DEVICE_LOG}
+      device: ${DUMB_NFS_LOG}
   dumb_data:
     driver_opts:
       type: "nfs"
       o: ${DUMB_NFS_PATH}
-      device: ${DUMB_NFS_DEVICE_DATA}
+      device: ${DUMB_NFS_DATA}
   dumb_mntdebrid:
     driver_opts:
       type: "nfs"
       o: ${DUMB_NFS_PATH}
-      device: ${DUMB_NFS_DEVICE_MBTDEBRID}
+      device: ${DUMB_NFS_MNTDEBRID}
 
