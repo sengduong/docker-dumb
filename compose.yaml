@@ -1,0 +1,56 @@
+services:
+  DUMB:
+    container_name: DUMB
+    image: iampuid0/dumb:latest                                       ## Optionally, specify a specific version of DUMB w/ image: iampuid0/dumb:2.0.0
+    stop_grace_period: 30s                                            ## Adjust as need to allow for graceful shutdown of the container
+    shm_size: 128mb                                                   ## Increased for PostgreSQL
+    stdin_open: true                                                  ## docker run -i
+    tty: true                                                         ## docker run -t
+    volumes:
+      - dumb_config:/config                     ## Location of configuration files.
+      - dumb_log:/log                           ## Location for logs
+      - dumb_data:/data                         ## Location for all service data
+      - dumb_mntdebrid:/mnt/debrid             ## Location for all symlinks and rclone mounts - change to /mnt/debrid:rshared if using decypharr 
+    environment:
+      - TZ=Europe/Zurich
+      - PUID=1000
+      - PGID=1000
+    # network_mode: container:gluetun                                ## Example to attach to gluetun vpn container if realdebrid blocks IP address
+    ports:
+      - "3005:3005"                                                  ## DUMB Frontend
+      - "3000:3000"                                                  ## Riven Frontend
+      - "5050:5050"                                                  ## pgAdmin 4 Frontend
+      - "5000:5000"                                                  ## CLI Debrid Frontend      
+      - "8282:8282"                                                  ## Decypharr Frontend         
+      - "32400:32400"                                                ## Plex Media Server      
+    devices:
+      - /dev/fuse:/dev/fuse:rwm
+      - /dev/dri:/dev/dri       
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+      - no-new-privileges
+
+volumes:
+  dumb_config:
+    driver_opts:
+      type: "nfs"
+      o: ${DUMB_NFS_PATH}
+      device: ${DUMB_NFS_DEVICE_CONFIG}
+  dumb_log:
+    driver_opts:
+      type: "nfs"
+      o: ${DUMB_NFS_PATH}
+      device: ${DUMB_NFS_DEVICE_LOG}
+  dumb_data:
+    driver_opts:
+      type: "nfs"
+      o: ${DUMB_NFS_PATH}
+      device: ${DUMB_NFS_DEVICE_DATA}
+  dumb_mntdebrid:
+    driver_opts:
+      type: "nfs"
+      o: ${DUMB_NFS_PATH}
+      device: ${DUMB_NFS_DEVICE_MBTDEBRID}
+
